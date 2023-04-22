@@ -1,3 +1,20 @@
+# функция проверки координаты
+def vvod_koodinat(x):
+    st = -1
+    while st < 0:
+        kl = input("Введите номер колонки:")
+        st = input("Введите номер столбца:")
+        if not (kl.isdigit() and st.isdigit()):
+            print("Вы ввели некорректную координату! Повторите снова!")
+            st = -1
+        elif (int(kl) < 0 or int(kl) > x - 1) or (int(st) < 0 or int(st) > x - 1):
+            print("Вы ввели некорректную координату! Повторите снова!")
+            st = -1
+        else:
+            kl, st = int(kl), int(st)
+            return kl, st
+
+
 # функция печати поля
 def print_board(x, game_board):
     print("")
@@ -9,14 +26,6 @@ def print_board(x, game_board):
 
 # функция проверки победителя
 def winner_test(x, game_board):
-    # проверка на ничью
-    t = True
-    for Kol in range(x):
-        t = t and all(game_board[Kol][Stolb] != '-' for Stolb in range(x))
-    if t:
-        print("Игра закончилась ничьей !!!")
-        return 'win'
-
     # проверка заполнения колонок
     for Kol in range(x):
         if all(game_board[Kol][Stolb] == game_board[Kol][Stolb + 1] and
@@ -58,6 +67,11 @@ def winner_test(x, game_board):
             print(f"Игрок 2 победил, заполнив диагональ сверху вниз, справа налево !!!")
             return 'win'
 
+    # проверка на ничью
+    if all(all(game_board[Kol][Stolb] != '-' for Stolb in range(x)) for Kol in range(x)):
+        print("Игра закончилась ничьей !!!")
+        return 'win'
+
 
 # НАЧАЛО
 print("*" * 5, " Игра Крестики-нолики для любого заданного пользователем размера игрового поля", "*" * 5)
@@ -82,28 +96,7 @@ while True:
     for i in range(2):
         while True:
             print(f"Ход игрока {igroki[i][0]} '{igroki[i][1]}':")
-            k = -1
-            while k < 0:
-                k = input("Введите номер колонки:")
-                if not k.isdigit():
-                    print("Вы ввели некорректное значение! Повторите снова!")
-                    k = -1
-                elif int(k) < 0 or int(k) > v - 1:
-                    print("Вы ввели некорректное значение! Повторите снова!")
-                    k = -1
-                else:
-                    k = int(k)
-            s = -1
-            while s < 0:
-                s = input("Введите номер столбца:")
-                if not s.isdigit():
-                    print("Вы ввели некорректное значение! Повторите снова!")
-                    s = -1
-                elif int(s) < 0 or int(s) > v - 1:
-                    print("Вы ввели некорректное значение! Повторите снова!")
-                    s = -1
-                else:
-                    s = int(s)
+            k, s = vvod_koodinat(v)
             # проверка занятости ячейки: если занята, вернуться в начало
             if game_board_start[k][s] == '-':
                 game_board_start[k][s] = igroki[i][2]
